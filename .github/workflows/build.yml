@@ -27,7 +27,7 @@ jobs:
         with:
           file: "Tabletop Soundbar.csproj"
           version: "^.0.0.0"
-        if: "contains(github.event.head_commit.message, '[RELEASE]')"
+        if: contains(github.event.head_commit.message, '[RELEASE]')
 
       - name: Bump minor build version
         id: bump-minor
@@ -35,7 +35,7 @@ jobs:
         with:
           file: "Tabletop Soundbar.csproj"
           version: "*.^.0.0"
-        if: "contains(github.event.head_commit.message, '[FEATURE]')"
+        if: contains(github.event.head_commit.message, '[FEATURE]')
 
       - name: Bump bulid build version
         id: bump-bulid
@@ -43,7 +43,7 @@ jobs:
         with:
           file: "Tabletop Soundbar.csproj"
           version: "*.*.^.0"
-        if: "contains(github.event.head_commit.message, '[FIX]')"
+        if: contains(github.event.head_commit.message, '[FIX]')
 
       - name: Bump revision build version
         id: bump-revision
@@ -51,11 +51,12 @@ jobs:
         with:
           file: "Tabletop Soundbar.csproj"
           version: "*.*.*.^"
-        if: "contains(github.event.head_commit.message, '[BUG]')"
+        if: contains(github.event.head_commit.message, '[BUG]')
 
       - run: |
           git config user.name "KacperPastusiak"
           git config user.email "pastusiakkacper@gmail.com"
-          git add .
+          git add "Tabletop Soundbar.csproj"
           git commit --amend --no-edit
-          git push --force
+          git push --force-with-lease
+        if: contains(fromJSON('["[BUG]", "[FIX], "[FEATURE], "[RELEASE]"]'), github.event.head_commit.message)
