@@ -55,6 +55,7 @@ jobs:
 
       - name: Set version env
         id: set-version
+        shell: bash
         run: |
           echo "appVersion=${{ steps.bump-major.outputs.newVersion }}${{ steps.bump-minor.outputs.newVersion }}${{ steps.bump-bulid.outputs.newVersion }}${{ steps.bump-revision.outputs.newVersion }}" >> $GITHUB_OUTPUT
 
