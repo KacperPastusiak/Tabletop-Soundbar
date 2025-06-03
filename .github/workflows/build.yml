@@ -62,5 +62,5 @@ jobs:
           git config user.name "KacperPastusiak"
           git config user.email "pastusiakkacper@gmail.com"
           git add "Tabletop Soundbar.csproj"
-          git commit -m "Update project versions to $GITHUB_OUTPUT"
+          git commit -m "Update project versions to $GITHUB_OUTPUT1"
           git push
