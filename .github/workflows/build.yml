@@ -3,7 +3,7 @@ on:
     branches: [ main ]
 
 jobs:
-  bump:
+  update:
     runs-on: windows-latest
     name: Build and bump version
     steps:
@@ -21,7 +21,7 @@ jobs:
       - name: Build
         run: dotnet build
 
-      - name: Bump major build version
+      - name: Update major build version
         id: bump-major
         uses: vers-one/dotnet-project-version-updater@v1.7
         with:
@@ -29,7 +29,7 @@ jobs:
           version: "^.0.0.0"
         if: contains(github.event.head_commit.message, '[RELEASE]')
 
-      - name: Bump minor build version
+      - name: Update minor build version
         id: bump-minor
         uses: vers-one/dotnet-project-version-updater@v1.7
         with:
@@ -37,7 +37,7 @@ jobs:
           version: "*.^.0.0"
         if: contains(github.event.head_commit.message, '[FEATURE]')
 
-      - name: Bump bulid build version
+      - name: Update bulid build version
         id: bump-bulid
         uses: vers-one/dotnet-project-version-updater@v1.7
         with:
@@ -45,7 +45,7 @@ jobs:
           version: "*.*.^.0"
         if: contains(github.event.head_commit.message, '[FIX]')
 
-      - name: Bump revision build version
+      - name: Update revision build version
         id: bump-revision
         uses: vers-one/dotnet-project-version-updater@v1.7
         with:
@@ -53,14 +53,14 @@ jobs:
           version: "*.*.*.^"
         if: contains(github.event.head_commit.message, '[BUG]')
 
+      - name: Set version env
+        run: echo "${{ steps.bump-major.outputs.newVersion }}${{ steps.bump-minor.outputs.newVersion }}${{ steps.bump-bulid.outputs.newVersion }}${{ steps.bump-revision.outputs.newVersion }}" >> "$GITHUB_OUTPUT"
+
       - name: Git commands
         if: contains(github.event.head_commit.message, '[BUG]') || contains(github.event.head_commit.message, '[FIX]') || contains(github.event.head_commit.message, '[FEATURE]') || contains(github.event.head_commit.message, '[RELEASE]')
         run: |
           git config user.name "KacperPastusiak"
           git config user.email "pastusiakkacper@gmail.com"
           git add "Tabletop Soundbar.csproj"
-          git commit -m "${{github.event.head_commit.message}}"
-          git rebase HEAD~2
-          git commit --amend --no-edit
-          git rebase continue
-          git push --force-with-lease
+          git commit -m "Update project versions to $GITHUB_OUTPUT"
+          git push
