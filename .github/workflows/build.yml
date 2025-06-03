@@ -53,10 +53,11 @@ jobs:
           version: "*.*.*.^"
         if: contains(github.event.head_commit.message, '[BUG]')
 
-      - run: |
+      - name: Git commands
+        if: contains(github.event.head_commit.message, fromJSON('["[BUG]", "[FIX]", "[FEATURE]", "[RELEASE]"]'))
+        run: |
           git config user.name "KacperPastusiak"
           git config user.email "pastusiakkacper@gmail.com"
           git add "Tabletop Soundbar.csproj"
           git commit --amend --no-edit
           git push --force-with-lease
-        if: contains(github.event.head_commit.message, fromJSON('["[BUG]", "[FIX]", "[FEATURE]", "[RELEASE]"]'))
