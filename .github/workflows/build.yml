@@ -2,9 +2,6 @@ on:
   push:
     branches: [ main ]
 
-env:
-  VERSION: "" 
-
 jobs:
   update:
     runs-on: windows-latest
@@ -57,10 +54,13 @@ jobs:
         if: contains(github.event.head_commit.message, '[BUG]')
 
       - name: Set version env
-        run: echo "VERSION='${{ steps.bump-major.outputs.newVersion }}${{ steps.bump-minor.outputs.newVersion }}${{ steps.bump-bulid.outputs.newVersion }}${{ steps.bump-revision.outputs.newVersion }}}'" >> "$GITHUB_ENV"
+        id: set-version
+        run: echo "VERSION='${{ steps.bump-major.outputs.newVersion }}${{ steps.bump-minor.outputs.newVersion }}${{ steps.bump-bulid.outputs.newVersion }}${{ steps.bump-revision.outputs.newVersion }}'" >> "$GITHUB_OUTPUT"
 
       - name: Git commands
         if: contains(github.event.head_commit.message, '[BUG]') || contains(github.event.head_commit.message, '[FIX]') || contains(github.event.head_commit.message, '[FEATURE]') || contains(github.event.head_commit.message, '[RELEASE]')
+        env:
+          VERSION: ${{ steps.set-version.outputs.VERSION }}
         run: |
           git config user.name "KacperPastusiak"
           git config user.email "pastusiakkacper@gmail.com"
