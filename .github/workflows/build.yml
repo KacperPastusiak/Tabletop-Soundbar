@@ -59,4 +59,4 @@ jobs:
           git add "Tabletop Soundbar.csproj"
           git commit --amend --no-edit
           git push --force-with-lease
-        if: contains(fromJSON('["[BUG]", "[FIX]", "[FEATURE]", "[RELEASE]"]'), github.event.head_commit.message)
+        if: contains(github.event.head_commit.message, fromJSON('["[BUG]", "[FIX]", "[FEATURE]", "[RELEASE]"]'))
