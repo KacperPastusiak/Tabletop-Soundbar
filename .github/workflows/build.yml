@@ -2,6 +2,9 @@ on:
   push:
     branches: [ main ]
 
+env:
+  csprojPath: "src/Tabletop Soundbar.csproj"
+
 jobs:
   update:
     runs-on: windows-latest
@@ -16,16 +19,16 @@ jobs:
           dotnet-version: 8
 
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore $csprojPath
 
       - name: Build
-        run: dotnet build
+        run: dotnet build $csprojPath
 
       - name: Update major build version
         id: bump-major
         uses: vers-one/dotnet-project-version-updater@v1.7
         with:
-          file: "src/Tabletop Soundbar.csproj"
+          file: $csprojPath
           version: "^.0.0.0"
         if: contains(github.event.head_commit.message, '[RELEASE]')
 
@@ -33,7 +36,7 @@ jobs:
         id: bump-minor
         uses: vers-one/dotnet-project-version-updater@v1.7
         with:
-          file: "src/Tabletop Soundbar.csproj"
+          file: $csprojPath
           version: "*.^.0.0"
         if: contains(github.event.head_commit.message, '[FEATURE]')
 
@@ -41,7 +44,7 @@ jobs:
         id: bump-bulid
         uses: vers-one/dotnet-project-version-updater@v1.7
         with:
-          file: "src/Tabletop Soundbar.csproj"
+          file: $csprojPath
           version: "*.*.^.0"
         if: contains(github.event.head_commit.message, '[FIX]')
 
@@ -49,7 +52,7 @@ jobs:
         id: bump-revision
         uses: vers-one/dotnet-project-version-updater@v1.7
         with:
-          file: "src/Tabletop Soundbar.csproj"
+          file: $csprojPath
           version: "*.*.*.^"
         if: contains(github.event.head_commit.message, '[BUG]')
 
@@ -64,6 +67,6 @@ jobs:
         run: |
           git config user.name "KacperPastusiak"
           git config user.email "pastusiakkacper@gmail.com"
-          git add "src/Tabletop Soundbar.csproj"
+          git add $csprojPath
           git commit -m "Update project versions to ${{ steps.set-version.outputs.appVersion }}"
           git push
