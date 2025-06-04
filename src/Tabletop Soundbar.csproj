@@ -10,4 +10,11 @@
     <FileVersion>0.0.0.12</FileVersion>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\" />
+    <Folder Include="Data\" />
+    <Folder Include="Controllers\" />
+    <Folder Include="Views\" />
+  </ItemGroup>
+
 </Project>
